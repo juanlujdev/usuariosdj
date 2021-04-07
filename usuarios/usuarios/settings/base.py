@@ -24,17 +24,17 @@ BASE_DIR = Path(__file__).ancestor(3)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-#PARA UTILIZAR EL FICHERO SECTRET.JSON Y NO PONER CONTRASEÑA
+# PARA UTILIZAR EL FICHERO SECTRET.JSON Y NO PONER CONTRASEÑA
 with open("secret.json") as f:
-    secret=json.loads(f.read())
+    secret = json.loads(f.read())
+
 
 def get_sectret(secret_name, secrets=secret):
     try:
         return secrets[secret_name]
     except:
-        msg="La variable %s no existe"% secret_name
+        msg = "La variable %s no existe" % secret_name
         raise ImproperlyConfigured(msg)
-
 
 
 SECRET_KEY = get_sectret('SECRET_KEY')
@@ -51,7 +51,9 @@ DJANGO_APPS = (
 
 )
 
-LOCAL_APPS = ()
+LOCAL_APPS = (
+    'applications.users',
+)
 
 THIRD_PARTY_APPS = ()
 
@@ -107,6 +109,9 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+AUTH_USER_MODEL = 'users.User'  # ESTOY CONFIGURANDO PARA QUE TRABAJE CON OTRO MODELO DE USUARIOS CUANDO SE TRATE DE USUARIOS
+# "permisiionMixing, modelo usuarios
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/

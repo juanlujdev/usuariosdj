@@ -6,7 +6,7 @@ from django.contrib.auth.models import BaseUserManager
 class UserManager(BaseUserManager, models.Manager):
     # _create_user creo el SUPERUSER con los campos que yo quiero
     def _create_user(self, username, email, password, is_staff, is_superuser, **extra_fields):  # is staff, puede entrar
-        # al admin,
+        # al admin,**extra_field es cualquier dato que queremos pasar
         user = self.model(
             username=username,
             email=email,

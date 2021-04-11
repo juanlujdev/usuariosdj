@@ -8,11 +8,10 @@
     <title>Document</title>
 </head>
 <body>
-<h1>Panel de usuario</h1>
-<h3>Bienvenido: {{user}} </h3><!-- viene de views, del login, recuperas user cargado. es algo interno de django-->
-<ul>
-    <li><a href="{% url 'users_app:user-logout'%}">Cerrar Sesion</a></li>
-    <li><a href="{% url 'users_app:user-update'%}">Actualizar Datos</a></li>
-</ul>
+<h1>Cambiar contraseña: {{user.nombres}}</h1>
+<form method="post"> {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">Actualizar</button>
+</form>
 </body>
 </html>

@@ -26,3 +26,11 @@ STATICFILES_DIRS = [BASE_DIR.child('static')]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR.child('media')
+
+# EMAIL SETTINGS  activamos el envio de email con django, esta en las vistas de users, Los datos de email y pass
+# estan en el fichero secret.json
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'  # le decimos que tipo de correo vamos a enviar
+EMAIL_HOST_USER = get_sectret('EMAIL')
+EMAIL_HOST_PASSWORD = get_sectret('PASS_EMAIL')
+EMAIL_PORT = 587

@@ -2,6 +2,8 @@ from django import forms
 
 from .models import User
 
+from django.contrib.auth import authenticate
+
 
 class UserRegisterForm(forms.ModelForm):  # forms.ModelForm cuando queremos que dependa de un modelo
     password1 = forms.CharField(
@@ -65,3 +67,41 @@ class LoginForm(forms.Form):  # se utiliza asi cuando no queremos depender de un
             }
         )
     )
+
+    # Validacion si un usuario existe o no existe o si el usuario es correcto. Como no sabemos a quien hacerle la
+    # validacion y realmente la tiene que hacer en los dos campos se utiliza la funcion clean(self)  a solas
+
+    def clean(self):
+        cleaned_data = super( LoginForm, self).clean()  # devuelveme to_dos los datos, .clean xq estamos
+        # sobreescribiendo un metodo
+        username = self.cleaned_data['username']
+        password = self.cleaned_data['password']
+
+        if not authenticate(username=username, password=password):  # si no coinciden
+            raise forms.ValidationError('Los datos de usuario no son correctos')  # Para que corte to_do el proceso
+            # si no es correcto y manda el mensaje de error
+        return self.cleaned_data
+
+
+class UpdatePasswordView(forms.Form):# no va a depender exclusivo de un modelo, poreso traemos forms.Form.
+    password1 = forms.CharField(
+        label='Contaseña',
+        required=True,
+        widget=forms.PasswordInput(
+            attrs={
+                'placeholder': 'Contraseña Actual'
+            }
+        )
+    )
+    password2 = forms.CharField(
+        label='Contaseña',
+        required=True,
+        widget=forms.PasswordInput(
+            attrs={
+                'placeholder': 'Contraseña Nueva'
+            }
+        )
+    )
+
+class VerificationForm(forms.Form):
+    codregistro = forms.CharField(required=True)

@@ -72,7 +72,7 @@ class LoginForm(forms.Form):  # se utiliza asi cuando no queremos depender de un
     # validacion y realmente la tiene que hacer en los dos campos se utiliza la funcion clean(self)  a solas
 
     def clean(self):
-        cleaned_data = super( LoginForm, self).clean()  # devuelveme to_dos los datos, .clean xq estamos
+        cleaned_data = super(LoginForm, self).clean()  # devuelveme to_dos los datos, .clean xq estamos
         # sobreescribiendo un metodo
         username = self.cleaned_data['username']
         password = self.cleaned_data['password']
@@ -83,7 +83,7 @@ class LoginForm(forms.Form):  # se utiliza asi cuando no queremos depender de un
         return self.cleaned_data
 
 
-class UpdatePasswordView(forms.Form):# no va a depender exclusivo de un modelo, poreso traemos forms.Form.
+class UpdatePasswordView(forms.Form):  # no va a depender exclusivo de un modelo, poreso traemos forms.Form.
     password1 = forms.CharField(
         label='Contaseña',
         required=True,
@@ -103,5 +103,27 @@ class UpdatePasswordView(forms.Form):# no va a depender exclusivo de un modelo, 
         )
     )
 
+
 class VerificationForm(forms.Form):
     codregistro = forms.CharField(required=True)
+
+    #La funcion init es la funcion que se ejecuta en el momento en el q se esta inicializando el formulario
+    def __init__(self, pk, *args, **kwargs):
+        self.id_user=pk
+        super(VerificationForm, self).__init__(*args,**kwargs)
+
+    # Hacemos la verificacion del codigo que recibimos en nuestro mail
+    def clean_codregistro(self):
+        codigo = self.cleaned_data['codregistro']
+
+        if len(codigo) == 6:
+            # Verificamos si el codigo y el id del usuario son validos
+            activo = User.objects.cod_validation(
+                self.id_user, #Accedo al id de usuario
+                codigo
+            )
+            if not activo:
+                raise forms.ValidationError('el codigo no es correctos')
+
+        else:
+            raise forms.ValidationError('el codigo no es correctos')
